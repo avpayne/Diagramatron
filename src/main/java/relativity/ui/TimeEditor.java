@@ -30,5 +30,13 @@ public abstract class TimeEditor extends NumberEditor implements Subscriber {
 		if( diagram!=null )
 			setRange(new Range(diagram.getScaledYStart(), diagram.getScaledYEnd()));
 	}
+
+	@Override
+	protected Double getGriddedValue( Double value )
+	{
+		if( diagram!=null && diagram.getGrid()!=null)
+			return Math.round(value/diagram.getGrid())*diagram.getGrid();
+		return value;
+	}
 	
 }

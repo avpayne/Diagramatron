@@ -18,25 +18,19 @@ public abstract class NumberEditor {
 	}
 	
 	public static final int STEPS = 500;
-	public static final String NUMBER_FORMAT = "#0.000";
 	protected static final Dimension SLIDER_DIMENSION = new Dimension(300, 20);
-	protected static final DecimalFormat FORMATTER = new DecimalFormat(NUMBER_FORMAT);
 	
 	private JLabel nameLabel;
 	private JLabel unitsLabel;
 	private JSlider slider;
-	private JFormattedTextField valueField;
+	private NumberField valueField;
 	private Range range;
-    private NumberFormat numberFormat = NumberFormat.getNumberInstance();
     private boolean numberAdjusting = false;
 	
 
 	protected NumberEditor(String name, Double initialValue, Range range, String units ) {
 		this.range=range;
 
-		numberFormat.setMaximumFractionDigits(2);
-		numberFormat.setMinimumFractionDigits(2);
-		
 		nameLabel = new JLabel(name);
 
 		slider = new JSlider( 0, STEPS, getInteger(initialValue));
@@ -44,23 +38,19 @@ public abstract class NumberEditor {
 		slider.addChangeListener(changeEvent->{
 			if(!numberAdjusting)
 			{
-				valueField.setValue(getDouble(slider.getValue()));
-				update( getDouble(slider.getValue()) );
+				valueField.setNumber(getDouble(slider.getValue()));
+				update( getDouble(slider.getValue()));
 			}
 		});
 
-		valueField = new JFormattedTextField(numberFormat);
+		valueField = NumberField.getField();
 		valueField.setColumns(5);
-		valueField.setValue(initialValue);
+		valueField.setNumber(initialValue);
 		valueField.addActionListener(actionEvent->{
-			try {
-				numberAdjusting = true;
-				slider.setValue(getInteger(numberFormat.parse(valueField.getText()).doubleValue()));
-				update(numberFormat.parse(valueField.getText()).doubleValue());
-				numberAdjusting = false;
-			} catch (ParseException e) {
-				//do nothing
-			}
+			numberAdjusting = true;
+			slider.setValue(getInteger(valueField.getNumber()));
+			update(valueField.getNumber());
+			numberAdjusting = false;
 		});
 		
 		unitsLabel = new JLabel(units);
@@ -91,7 +81,7 @@ public abstract class NumberEditor {
 	}
 	
 	private Double getDouble( Integer value ) {
-		return range.low+((double)value/STEPS)*(range.high-range.low);
+		return getGriddedValue(range.low+((double)value/STEPS)*(range.high-range.low));
 	}
 
 	protected Range getRange() {
@@ -100,13 +90,14 @@ public abstract class NumberEditor {
 
 	protected void setRange(Range range) {
 		this.range = range;
-		try {
-			numberAdjusting = true;
-			slider.setValue(getInteger(numberFormat.parse(valueField.getText()).doubleValue()));
-			numberAdjusting = false;
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+		numberAdjusting = true;
+		slider.setValue(getInteger(valueField.getNumber()));
+		numberAdjusting = false;
+	}
+	
+	protected Double getGriddedValue( Double value )
+	{
+		return value;
 	}
 
 }

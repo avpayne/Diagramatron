@@ -30,5 +30,13 @@ public abstract class DistanceEditor extends NumberEditor implements Subscriber 
 		if( diagram!=null )
 			setRange(new Range(diagram.getScaledXStart(), diagram.getScaledXEnd()));
 	}
+	
+	@Override
+	protected Double getGriddedValue( Double value )
+	{
+		if( diagram!=null && diagram.getGrid()!=null)
+			return Math.round(value/diagram.getGrid())*diagram.getGrid();
+		return value;
+	}
 
 }

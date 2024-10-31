@@ -36,6 +36,8 @@ public class MinkowskiDiagram implements Serializable {
 	private double scaledYStart;
 	private double scaledYEnd;
 	
+	private Double grid=null;
+	
 
 	public MinkowskiDiagram() {
 		addFrame(new FrameOfReference());
@@ -245,6 +247,14 @@ public class MinkowskiDiagram implements Serializable {
 
 	public double getScaledYEnd() {
 		return scaledYEnd;
+	}
+
+	public Double getGrid() {
+		return grid;
+	}
+
+	public void setGrid(Double grid) {
+		this.grid = grid;
 	}
 
 }

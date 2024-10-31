@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.awt.KeyboardFocusManager;
 import java.awt.Taskbar;
 import java.awt.Toolkit;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -25,13 +26,14 @@ import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -83,8 +85,9 @@ public class Diagramatron extends JFrame {
 	private JMenuItem saveAsItem = new JMenuItem("Save As");
 	private JMenuItem newItem = new JMenuItem("New");
 	private JMenuItem quitItem = new JMenuItem("Quit");
-	private JMenuItem addBackgroundImageItem = new JCheckBoxMenuItem("Add Background Image");
-	private JMenuItem removeBackgroundImageItem = new JCheckBoxMenuItem("Remove Background Image");
+	private JMenuItem addBackgroundImageItem = new JMenuItem("Add Background Image");
+	private JMenuItem removeBackgroundImageItem = new JMenuItem("Remove Background Image");
+	private JMenuItem setGridItem = new JMenuItem("Set SpaceTime Rounding");
 
 	public static void main(String[] args) {
 		new Diagramatron();
@@ -123,11 +126,11 @@ public class Diagramatron extends JFrame {
 		easterEgg();
 		final Taskbar taskbar = Taskbar.getTaskbar();
 		taskbar.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("images/DockIcon.jpg")));
-		
+
 	}
 
 	private void easterEgg() {
-		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher( keyEvent-> {
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyEvent -> {
 			if (!keyEvent.isConsumed() && keyEvent.getID() == KeyEvent.KEY_TYPED && !unlocked) {
 				String s = enteredPhrase + keyEvent.getKeyChar();
 				if (SECRET_PASSPHRASE.startsWith(s))
@@ -171,6 +174,7 @@ public class Diagramatron extends JFrame {
 
 		viewMenu.add(addBackgroundImageItem);
 		viewMenu.add(removeBackgroundImageItem);
+		viewMenu.add(setGridItem);
 
 		addBackgroundImageItem.addActionListener(actionEvent -> {
 			JFileChooser fileChooser = new JFileChooser();
@@ -187,17 +191,31 @@ public class Diagramatron extends JFrame {
 				repaint();
 				spaceTimePanel.getDiagram().setDirty();
 			}
-			
+
 		});
 		removeBackgroundImageItem.addActionListener(actionEvent -> {
-			if( backgroundImage != null)
-			{
-				backgroundImage=null;
+			if (backgroundImage != null) {
+				backgroundImage = null;
 				broker.publish(new Message(relativity.message.Type.BACKGROUND_UPDATED, backgroundImage));
 				revalidate();
 				repaint();
 				spaceTimePanel.getDiagram().setDirty();
 			}
+		});
+
+		setGridItem.addActionListener(actionEvent -> {
+			NumberField valueField = NumberField.getField();
+			int okCxl = JOptionPane.showConfirmDialog(this, valueField, "Enter Grid", JOptionPane.OK_CANCEL_OPTION);
+			if (okCxl == JOptionPane.OK_OPTION) {
+				try {
+					Double grid = Double.valueOf( valueField.getText() );
+					if (spaceTimePanel.getDiagram() != null)
+						spaceTimePanel.getDiagram().setGrid(Math.max(grid, 0.001));
+				} catch( NumberFormatException e ) {
+					// don't do anything, just leave last grid setting (may be null)
+				}
+			}
+
 		});
 
 		helpMenu.add(aboutItem);
@@ -226,7 +244,7 @@ public class Diagramatron extends JFrame {
 				update(diagram);
 				broker.publish(new Message(relativity.message.Type.DIAGRAM_LOADED, diagram));
 				diagram.clearDirty();
-				backgroundImage=null;
+				backgroundImage = null;
 				broker.publish(new Message(relativity.message.Type.BACKGROUND_UPDATED, backgroundImage));
 			}
 		});
@@ -256,7 +274,7 @@ public class Diagramatron extends JFrame {
 			MinkowskiDiagram diagram = new MinkowskiDiagram();
 			update(diagram);
 			broker.publish(new Message(relativity.message.Type.NEW_DIAGRAM, diagram));
-			backgroundImage=null;
+			backgroundImage = null;
 			broker.publish(new Message(relativity.message.Type.BACKGROUND_UPDATED, backgroundImage));
 		}
 	}
