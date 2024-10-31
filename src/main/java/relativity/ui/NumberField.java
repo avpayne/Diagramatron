@@ -1,6 +1,5 @@
 package relativity.ui;
 
-import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
@@ -13,20 +12,19 @@ public class NumberField extends JFormattedTextField {
 
 	public static final String NUMBER_FORMAT = "#0.000";
 	public static final DecimalFormat FORMATTER = new DecimalFormat(NUMBER_FORMAT);
- 
+
 	private static final long serialVersionUID = -3793609763066162665L;
 
-	private NumberField( NumberFormat format)
-	{
-		super( format );
+	private NumberField(NumberFormat format) {
+		super(format);
 		addKeyListener(new KeyAdapter() {
 			String lastValue = "";
+
 			@Override
 			public void keyTyped(KeyEvent e) {
-				SwingUtilities.invokeLater(()-> {
+				SwingUtilities.invokeLater(() -> {
 					try {
-						if(!getText().trim().equals("") && !getText().trim().equals("-"))
-						{
+						if (!getText().trim().equals("") && !getText().trim().equals("-")) {
 							Double.parseDouble(getText());
 							lastValue = getText();
 						}
@@ -35,25 +33,22 @@ public class NumberField extends JFormattedTextField {
 					}
 				});
 			}
-		});		
+		});
 	}
-	
-	public static NumberField getField()
-	{
+
+	public static NumberField getField() {
 		NumberFormat numberFormat = NumberFormat.getNumberInstance();
 		numberFormat.setMaximumFractionDigits(3);
 		numberFormat.setMinimumFractionDigits(3);
-		return new NumberField( numberFormat );
+		return new NumberField(numberFormat);
 	}
-	
-	public Double getNumber()
-	{
+
+	public Double getNumber() {
 		return Double.valueOf(getText());
 	}
-	
-	public void setNumber( Double value )
-	{
-		setText( FORMATTER.format(value) );
+
+	public void setNumber(Double value) {
+		setText(FORMATTER.format(value));
 	}
-	
+
 }

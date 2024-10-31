@@ -6,7 +6,6 @@ import java.awt.Image;
 import java.awt.KeyboardFocusManager;
 import java.awt.Taskbar;
 import java.awt.Toolkit;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -32,8 +31,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -208,10 +205,10 @@ public class Diagramatron extends JFrame {
 			int okCxl = JOptionPane.showConfirmDialog(this, valueField, "Enter Grid", JOptionPane.OK_CANCEL_OPTION);
 			if (okCxl == JOptionPane.OK_OPTION) {
 				try {
-					Double grid = Double.valueOf( valueField.getText() );
+					Double grid = Double.valueOf(valueField.getText());
 					if (spaceTimePanel.getDiagram() != null)
 						spaceTimePanel.getDiagram().setGrid(Math.max(grid, 0.001));
-				} catch( NumberFormatException e ) {
+				} catch (NumberFormatException e) {
 					// don't do anything, just leave last grid setting (may be null)
 				}
 			}
