@@ -5,7 +5,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.KeyboardFocusManager;
 import java.awt.Taskbar;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -122,7 +121,8 @@ public class Diagramatron extends JFrame {
 
 		easterEgg();
 		final Taskbar taskbar = Taskbar.getTaskbar();
-		taskbar.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("images/DockIcon.jpg")));
+		ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("images/DockIcon.jpg"));
+		taskbar.setIconImage(icon.getImage());
 
 	}
 

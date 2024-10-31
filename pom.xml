@@ -6,8 +6,8 @@
 	<artifactId>relativity</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
-		<configuration-target>1.22</configuration-target>
-		<configuration-source>1.22</configuration-source>
+		<configuration-target>1.21</configuration-target>
+		<configuration-source>1.21</configuration-source>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -69,7 +69,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>relativity.ui.MainGui</mainClass>
+							<mainClass>relativity.ui.Diagramatron</mainClass>
 						</manifest>
 					</archive>
 					<appendAssemblyId>false</appendAssemblyId>
