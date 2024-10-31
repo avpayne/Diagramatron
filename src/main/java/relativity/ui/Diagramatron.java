@@ -202,15 +202,13 @@ public class Diagramatron extends JFrame {
 
 		setGridItem.addActionListener(actionEvent -> {
 			NumberField valueField = NumberField.getField();
+			if( spaceTimePanel.getDiagram()!=null && spaceTimePanel.getDiagram().getGrid()!=null)
+				valueField.setNumber( spaceTimePanel.getDiagram().getGrid() );
 			int okCxl = JOptionPane.showConfirmDialog(this, valueField, "Enter Grid", JOptionPane.OK_CANCEL_OPTION);
 			if (okCxl == JOptionPane.OK_OPTION) {
-				try {
-					Double grid = Double.valueOf(valueField.getText());
-					if (spaceTimePanel.getDiagram() != null)
-						spaceTimePanel.getDiagram().setGrid(Math.max(grid, 0.001));
-				} catch (NumberFormatException e) {
-					// don't do anything, just leave last grid setting (may be null)
-				}
+				Double grid = valueField.getNumber();
+				if (spaceTimePanel.getDiagram() != null && grid!=null )
+					spaceTimePanel.getDiagram().setGrid(Math.max(grid, 0.001));
 			}
 
 		});

@@ -44,7 +44,11 @@ public class NumberField extends JFormattedTextField {
 	}
 
 	public Double getNumber() {
-		return Double.valueOf(getText());
+		try {
+			return Double.valueOf(getText());
+		} catch (NumberFormatException exception) {
+			return null;
+		}
 	}
 
 	public void setNumber(Double value) {
